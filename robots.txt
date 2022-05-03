@@ -1,0 +1,7 @@
+User-Agent: Neevabot
+Allow: /
+Disallow: /private/
+
+User-Agent: Googlebot
+Allow: /
+Disallow: /private/
