@@ -1,0 +1,750 @@
+/* ========================================
+   Blue Seed Solutions - Modern CSS
+   Modernized 2026
+   ======================================== */
+
+/* CSS Custom Properties (Variables) */
+:root {
+  /* Brand Colors */
+  --bss-primary: #4361EE;
+  --bss-primary-dark: #3651d4;
+  --bss-primary-light: #6b83f2;
+  --bss-primary-gradient: linear-gradient(135deg, #f8f9ff 0%, #eef1ff 100%);
+
+  /* Accent Colors */
+  --bss-success: #10b981;
+  --bss-secondary: #ec4899;
+  --bss-info: #06b6d4;
+
+  /* Neutrals */
+  --bss-white: #ffffff;
+  --bss-light: #f8fafc;
+  --bss-gray-100: #f1f5f9;
+  --bss-gray-200: #e2e8f0;
+  --bss-gray-300: #cbd5e1;
+  --bss-gray-400: #94a3b8;
+  --bss-gray-500: #64748b;
+  --bss-gray-600: #475569;
+  --bss-gray-700: #334155;
+  --bss-gray-800: #1e293b;
+  --bss-gray-900: #0f172a;
+  --bss-black: #000000;
+
+  /* Typography */
+  --font-primary: 'Poppins', sans-serif;
+  --font-secondary: 'Inter', sans-serif;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+
+  /* Z-index layers */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal: 1050;
+  --z-cursor: 9999;
+}
+
+/* ========================================
+   Global Styles
+   ======================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-secondary);
+  color: var(--bss-gray-700);
+  overflow-x: hidden;
+}
+
+/* Hide default cursor when custom cursor is active */
+body.custom-cursor-active {
+  cursor: none;
+}
+
+body.custom-cursor-active a,
+body.custom-cursor-active button,
+body.custom-cursor-active input,
+body.custom-cursor-active textarea,
+body.custom-cursor-active select,
+body.custom-cursor-active [role="button"] {
+  cursor: none;
+}
+
+/* ========================================
+   Custom Cursor
+   ======================================== */
+
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background-color: var(--bss-primary);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: var(--z-cursor);
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, background-color 0.2s ease;
+  mix-blend-mode: difference;
+}
+
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--bss-primary);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: calc(var(--z-cursor) - 1);
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease-out, width 0.2s ease, height 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+  opacity: 0.5;
+}
+
+/* Cursor hover states */
+.cursor-dot.cursor-hover {
+  width: 12px;
+  height: 12px;
+  background-color: var(--bss-white);
+}
+
+.cursor-ring.cursor-hover {
+  width: 60px;
+  height: 60px;
+  opacity: 0.8;
+  border-color: var(--bss-primary-light);
+}
+
+/* Cursor click state */
+.cursor-dot.cursor-click {
+  transform: translate(-50%, -50%) scale(0.8);
+}
+
+.cursor-ring.cursor-click {
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
+/* Cursor on text */
+.cursor-ring.cursor-text {
+  width: 4px;
+  height: 30px;
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
+/* Hide cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+  }
+
+  body.custom-cursor-active {
+    cursor: auto;
+  }
+
+  body.custom-cursor-active a,
+  body.custom-cursor-active button {
+    cursor: pointer;
+  }
+}
+
+/* ========================================
+   Typography - BSS Header
+   ======================================== */
+
+.bssHeader {
+  font-family: var(--font-primary);
+  font-weight: 700 !important;
+  line-height: 1.1;
+}
+
+@media (min-width: 300px) {
+  .bssHeader {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 576px) {
+  .bssHeader {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .bssHeader {
+    font-size: 3.5rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .bssHeader {
+    font-size: 4rem;
+  }
+}
+
+/* ========================================
+   Hero Section Layout
+   ======================================== */
+
+.hero-container {
+  padding-top: 100px; /* Account for fixed navbar */
+  padding-bottom: 2rem;
+}
+
+.min-vh-85 {
+  min-height: 85vh;
+}
+
+.hero-text-col {
+  z-index: 2;
+}
+
+.hero-images-col {
+  position: relative;
+}
+
+/* Hero images grid - overlapping layout */
+.hero-images-grid {
+  position: relative;
+  height: 500px;
+}
+
+.hero-img {
+  position: absolute;
+  transition: transform 0.3s ease;
+}
+
+.hero-img img {
+  max-width: 100%;
+  height: auto;
+}
+
+.hero-img-1 {
+  top: 10%;
+  left: 0;
+  width: 55%;
+  z-index: 1;
+}
+
+.hero-img-2 {
+  top: 0;
+  right: 0;
+  width: 50%;
+  z-index: 2;
+}
+
+.hero-img-3 {
+  bottom: 0;
+  left: 15%;
+  width: 60%;
+  z-index: 3;
+}
+
+.hero-img:hover {
+  transform: scale(1.02);
+  z-index: 10;
+}
+
+/* Mobile: Stack images differently */
+@media (max-width: 991px) {
+  .hero-container {
+    padding-top: 80px;
+  }
+
+  .min-vh-85 {
+    min-height: auto;
+  }
+
+  .hero-text-col {
+    margin-bottom: 2rem;
+    padding-top: 2rem;
+  }
+
+  .hero-images-grid {
+    height: 350px;
+    margin-bottom: 2rem;
+  }
+
+  .hero-img-1 {
+    width: 50%;
+    top: 5%;
+    left: 5%;
+  }
+
+  .hero-img-2 {
+    width: 45%;
+    top: 0;
+    right: 5%;
+  }
+
+  .hero-img-3 {
+    width: 55%;
+    bottom: 0;
+    left: 20%;
+  }
+}
+
+/* ========================================
+   Animations - Scroll Reveal
+   ======================================== */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Staggered reveal for children */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.reveal-stagger.revealed > *:nth-child(1) { transition-delay: 0.1s; }
+.reveal-stagger.revealed > *:nth-child(2) { transition-delay: 0.2s; }
+.reveal-stagger.revealed > *:nth-child(3) { transition-delay: 0.3s; }
+.reveal-stagger.revealed > *:nth-child(4) { transition-delay: 0.4s; }
+.reveal-stagger.revealed > *:nth-child(5) { transition-delay: 0.5s; }
+.reveal-stagger.revealed > *:nth-child(6) { transition-delay: 0.6s; }
+
+.reveal-stagger.revealed > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========================================
+   Button Enhancements
+   ======================================== */
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.btn-primary {
+  background-color: var(--bss-primary);
+  border-color: var(--bss-primary);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--bss-primary-dark);
+  border-color: var(--bss-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Button ripple effect container */
+.btn .btn-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: scale(0);
+  animation: ripple 0.6s ease-out;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ========================================
+   Card Enhancements
+   ======================================== */
+
+.card {
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  border: none;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Service cards */
+.card.shadow-sm:hover {
+  box-shadow: var(--shadow-lg) !important;
+}
+
+/* ========================================
+   Navbar Enhancements
+   ======================================== */
+
+#mainNav {
+  transition: background-color var(--transition-normal),
+              padding var(--transition-normal),
+              box-shadow var(--transition-normal);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+#mainNav.navbar-shrink {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  box-shadow: var(--shadow-md);
+}
+
+.nav-link {
+  position: relative;
+  transition: color var(--transition-fast);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--bss-primary);
+  transition: width var(--transition-normal), left var(--transition-normal);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+  left: 0;
+}
+
+.nav-link.active {
+  color: var(--bss-primary) !important;
+  font-weight: 600;
+}
+
+/* ========================================
+   Form Enhancements
+   ======================================== */
+
+.form-control {
+  transition: border-color var(--transition-fast),
+              box-shadow var(--transition-fast),
+              transform var(--transition-fast);
+  border: 2px solid var(--bss-gray-200);
+}
+
+.form-control:focus {
+  border-color: var(--bss-primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+  transform: translateY(-1px);
+}
+
+.form-control::placeholder {
+  color: var(--bss-gray-400);
+  transition: opacity var(--transition-fast);
+}
+
+.form-control:focus::placeholder {
+  opacity: 0.5;
+}
+
+/* Form labels (visually hidden but accessible) */
+.form-label-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Loading state for submit buttons */
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   Hero Section - Mobile Fix
+   ======================================== */
+
+@media (max-width: 767px) {
+  .hero-images {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .hero-images > div {
+    flex: 0 0 auto !important;
+    width: 80% !important;
+    transform: none !important;
+    margin-bottom: 1rem;
+  }
+
+  .hero-images > div:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* ========================================
+   Gradient Backgrounds
+   ======================================== */
+
+.bg-primary-gradient {
+  background: var(--bss-primary-gradient);
+}
+
+.bg-primary-light {
+  background-color: rgba(67, 97, 238, 0.1);
+}
+
+.bg-secondary-light {
+  background-color: rgba(236, 72, 153, 0.1);
+}
+
+.bg-info-light {
+  background-color: rgba(6, 182, 212, 0.1);
+}
+
+/* ========================================
+   Portfolio/Projects Images
+   ======================================== */
+
+.portfolio-img {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.portfolio-item:hover .portfolio-img {
+  transform: scale(1.05);
+}
+
+.portfolio-item {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+/* ========================================
+   Footer
+   ======================================== */
+
+footer a {
+  color: var(--bss-gray-600);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+footer a:hover {
+  color: var(--bss-primary);
+}
+
+/* ========================================
+   Icon Styles
+   ======================================== */
+
+.bs-icon {
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+}
+
+.bs-icon:hover {
+  transform: scale(1.1);
+}
+
+.bs-icon-primary {
+  background-color: var(--bss-primary);
+  color: white;
+}
+
+/* ========================================
+   Utility Classes
+   ======================================== */
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--bss-primary) 0%, var(--bss-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--bss-primary);
+  outline-offset: 2px;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bss-primary);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  z-index: 10000;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* ========================================
+   Testimonial Cards
+   ======================================== */
+
+.testimonial-card {
+  position: relative;
+  transition: transform var(--transition-normal);
+}
+
+.testimonial-card::before {
+  content: '"';
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  font-size: 4rem;
+  color: var(--bss-primary);
+  opacity: 0.2;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-3px);
+}
+
+/* ========================================
+   Section Spacing
+   ======================================== */
+
+section {
+  position: relative;
+}
+
+/* ========================================
+   Lazy Loading Images
+   ======================================== */
+
+img[loading="lazy"] {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+img[loading="lazy"].loaded,
+img[loading="lazy"]:not([data-src]) {
+  opacity: 1;
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+
+@media print {
+  .cursor-dot,
+  .cursor-ring,
+  nav,
+  .btn {
+    display: none !important;
+  }
+
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+}
