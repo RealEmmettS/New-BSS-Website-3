@@ -1,35 +1,83 @@
 /* ========================================
-   Blue Seed Solutions - Animations & Custom Cursor
-   Powered by Anime.js
+   Blue Seed Solutions - Animations & Smooth Scroll
+   Powered by Anime.js + Lenis
    ======================================== */
 
 (function() {
   'use strict';
 
-  // Check if we're on a touch device
+  // ========================================
+  // Feature Detection & Accessibility
+  // ========================================
+
   const isTouchDevice = () => {
     return (('ontouchstart' in window) ||
       (navigator.maxTouchPoints > 0) ||
       (navigator.msMaxTouchPoints > 0));
   };
 
+  // Check for reduced motion preference (accessibility)
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   // ========================================
-  // Custom Cursor
+  // Smooth Scroll with Lenis
+  // ========================================
+
+  class SmoothScroll {
+    constructor() {
+      if (typeof Lenis === 'undefined') {
+        console.warn('Lenis not loaded - using native scroll');
+        return;
+      }
+
+      // Skip smooth scroll if user prefers reduced motion
+      if (prefersReducedMotion) {
+        console.log('Reduced motion preferred - smooth scroll disabled');
+        return;
+      }
+
+      this.lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 2,
+        infinite: false
+      });
+
+      // Store globally for other modules
+      window.lenis = this.lenis;
+
+      this.raf(performance.now());
+    }
+
+    raf(time) {
+      this.lenis.raf(time);
+      requestAnimationFrame((t) => this.raf(t));
+    }
+  }
+
+  // ========================================
+  // Custom Cursor (Optimized)
   // ========================================
 
   class CustomCursor {
     constructor() {
-      if (isTouchDevice()) return;
+      // Skip on touch devices or reduced motion
+      if (isTouchDevice() || prefersReducedMotion) return;
 
       this.dot = null;
       this.ring = null;
       this.mouseX = 0;
       this.mouseY = 0;
+      this.dotX = 0;
+      this.dotY = 0;
       this.ringX = 0;
       this.ringY = 0;
       this.isHovering = false;
       this.isClicking = false;
-      this.isTextHover = false;
 
       this.init();
     }
@@ -50,19 +98,15 @@
       // Bind events
       this.bindEvents();
 
-      // Start animation loop
+      // Start animation loop (RAF for both dot and ring)
       this.animate();
     }
 
     bindEvents() {
-      // Mouse move
+      // Mouse move - just store coordinates
       document.addEventListener('mousemove', (e) => {
         this.mouseX = e.clientX;
         this.mouseY = e.clientY;
-
-        // Update dot position immediately
-        this.dot.style.left = this.mouseX + 'px';
-        this.dot.style.top = this.mouseY + 'px';
       });
 
       // Mouse down/up
@@ -78,38 +122,23 @@
         this.ring.classList.remove('cursor-click');
       });
 
-      // Hover states for interactive elements
-      const interactiveElements = document.querySelectorAll('a, button, input, textarea, select, [role="button"], .card');
-
-      interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
+      // Event delegation for hover states (performance optimized)
+      document.body.addEventListener('mouseover', (e) => {
+        const interactive = e.target.closest('a, button, input, textarea, select, [role="button"], .card');
+        if (interactive) {
           this.isHovering = true;
           this.dot.classList.add('cursor-hover');
           this.ring.classList.add('cursor-hover');
-        });
+        }
+      });
 
-        el.addEventListener('mouseleave', () => {
+      document.body.addEventListener('mouseout', (e) => {
+        const interactive = e.target.closest('a, button, input, textarea, select, [role="button"], .card');
+        if (interactive) {
           this.isHovering = false;
           this.dot.classList.remove('cursor-hover');
           this.ring.classList.remove('cursor-hover');
-        });
-      });
-
-      // Text hover state
-      const textElements = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, li');
-
-      textElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-          if (!this.isHovering) {
-            this.isTextHover = true;
-            this.ring.classList.add('cursor-text');
-          }
-        });
-
-        el.addEventListener('mouseleave', () => {
-          this.isTextHover = false;
-          this.ring.classList.remove('cursor-text');
-        });
+        }
       });
 
       // Hide cursor when leaving window
@@ -125,11 +154,18 @@
     }
 
     animate() {
-      // Smooth follow for ring (lerp)
-      const ease = 0.15;
-      this.ringX += (this.mouseX - this.ringX) * ease;
-      this.ringY += (this.mouseY - this.ringY) * ease;
+      // Smooth follow for dot (faster)
+      const dotEase = 0.35;
+      this.dotX += (this.mouseX - this.dotX) * dotEase;
+      this.dotY += (this.mouseY - this.dotY) * dotEase;
 
+      // Smooth follow for ring (slower)
+      const ringEase = 0.15;
+      this.ringX += (this.mouseX - this.ringX) * ringEase;
+      this.ringY += (this.mouseY - this.ringY) * ringEase;
+
+      this.dot.style.left = this.dotX + 'px';
+      this.dot.style.top = this.dotY + 'px';
       this.ring.style.left = this.ringX + 'px';
       this.ring.style.top = this.ringY + 'px';
 
@@ -143,6 +179,9 @@
 
   class ScrollReveal {
     constructor() {
+      // Skip if reduced motion
+      if (prefersReducedMotion) return;
+
       this.revealElements = [];
       this.init();
     }
@@ -168,8 +207,6 @@
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('revealed');
-            // Optionally unobserve after reveal
-            // this.observer.unobserve(entry.target);
           }
         });
       }, observerOptions);
@@ -211,12 +248,19 @@
 
   class HeroAnimation {
     constructor() {
+      // Skip if reduced motion or no Anime.js
+      if (prefersReducedMotion) return;
+      if (typeof anime === 'undefined') {
+        console.warn('Anime.js not loaded - hero animation disabled');
+        return;
+      }
+
       this.init();
     }
 
     init() {
       const heroTitle = document.querySelector('.bssHeader');
-      if (!heroTitle || typeof anime === 'undefined') return;
+      if (!heroTitle) return;
 
       // Wrap each word in a span, preserving existing HTML tags
       const html = heroTitle.innerHTML;
@@ -250,6 +294,8 @@
 
   class ButtonRipple {
     constructor() {
+      // Skip if reduced motion
+      if (prefersReducedMotion) return;
       this.init();
     }
 
@@ -281,7 +327,10 @@
 
   class MagneticButtons {
     constructor() {
-      if (isTouchDevice()) return;
+      // Skip on touch devices or reduced motion
+      if (isTouchDevice() || prefersReducedMotion) return;
+      if (typeof anime === 'undefined') return;
+
       this.init();
     }
 
@@ -294,27 +343,23 @@
           const x = e.clientX - rect.left - rect.width / 2;
           const y = e.clientY - rect.top - rect.height / 2;
 
-          if (typeof anime !== 'undefined') {
-            anime({
-              targets: btn,
-              translateX: x * 0.2,
-              translateY: y * 0.2,
-              duration: 300,
-              easing: 'easeOutQuad'
-            });
-          }
+          anime({
+            targets: btn,
+            translateX: x * 0.2,
+            translateY: y * 0.2,
+            duration: 300,
+            easing: 'easeOutQuad'
+          });
         });
 
         btn.addEventListener('mouseleave', () => {
-          if (typeof anime !== 'undefined') {
-            anime({
-              targets: btn,
-              translateX: 0,
-              translateY: 0,
-              duration: 500,
-              easing: 'easeOutElastic(1, .5)'
-            });
-          }
+          anime({
+            targets: btn,
+            translateX: 0,
+            translateY: 0,
+            duration: 500,
+            easing: 'easeOutElastic(1, .5)'
+          });
         });
       });
     }
@@ -349,10 +394,10 @@
   }
 
   // ========================================
-  // Navbar Scroll Effect Enhancement
+  // Active Nav Link Detection
   // ========================================
 
-  class NavbarEnhancement {
+  class ActiveNavLink {
     constructor() {
       this.init();
     }
@@ -360,21 +405,6 @@
     init() {
       const navbar = document.getElementById('mainNav');
       if (!navbar) return;
-
-      let lastScroll = 0;
-
-      window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-
-        // Add/remove shrink class
-        if (currentScroll > 100) {
-          navbar.classList.add('navbar-shrink');
-        } else {
-          navbar.classList.remove('navbar-shrink');
-        }
-
-        lastScroll = currentScroll;
-      });
 
       // Set active nav link based on current page
       const currentPage = window.location.pathname.split('/').pop() || 'index.html';
@@ -395,40 +425,7 @@
   }
 
   // ========================================
-  // Parallax Enhancement (if Anime.js available)
-  // ========================================
-
-  class ParallaxEnhancement {
-    constructor() {
-      if (isTouchDevice()) return;
-      this.init();
-    }
-
-    init() {
-      const parallaxElements = document.querySelectorAll('[data-bss-parallax]');
-      if (parallaxElements.length === 0 || typeof anime === 'undefined') return;
-
-      // Enhanced parallax with Anime.js
-      window.addEventListener('scroll', () => {
-        const scrollY = window.pageYOffset;
-
-        parallaxElements.forEach(el => {
-          const speed = parseFloat(el.dataset.bssParallaxSpeed) || 0.5;
-          const yPos = -(scrollY * speed);
-
-          anime({
-            targets: el,
-            translateY: yPos,
-            duration: 0,
-            easing: 'linear'
-          });
-        });
-      });
-    }
-  }
-
-  // ========================================
-  // Lazy Load Images
+  // Lazy Load Images Enhancement
   // ========================================
 
   class LazyLoadImages {
@@ -457,6 +454,10 @@
 
   class CounterAnimation {
     constructor() {
+      // Skip if reduced motion or no Anime.js
+      if (prefersReducedMotion) return;
+      if (typeof anime === 'undefined') return;
+
       this.init();
     }
 
@@ -466,7 +467,7 @@
 
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting && typeof anime !== 'undefined') {
+          if (entry.isIntersecting) {
             const target = entry.target;
             const endValue = parseInt(target.dataset.counter, 10);
 
@@ -492,21 +493,30 @@
   // ========================================
 
   function init() {
-    // Initialize all modules
+    // Initialize smooth scroll first (Lenis)
+    new SmoothScroll();
+
+    // Initialize all other modules
     new CustomCursor();
     new ScrollReveal();
     new HeroAnimation();
     new ButtonRipple();
     new MagneticButtons();
     new FormHandler();
-    new NavbarEnhancement();
+    new ActiveNavLink();
     new LazyLoadImages();
     new CounterAnimation();
 
-    console.log('BSS Animations initialized');
+    // Log initialization status
+    const features = [];
+    if (typeof Lenis !== 'undefined' && !prefersReducedMotion) features.push('Lenis');
+    if (typeof anime !== 'undefined') features.push('Anime.js');
+    if (!isTouchDevice() && !prefersReducedMotion) features.push('Custom Cursor');
+
+    console.log('BSS Animations initialized:', features.join(', ') || 'basic features');
   }
 
-  // Wait for DOM and Anime.js
+  // Wait for DOM
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

@@ -1,0 +1,80 @@
+# AI Image Generation Prompts for Blue Seed Solutions
+# Style: Miniature Isometric
+# Generated: January 2026
+
+==================================================
+1. SEO SERVICES
+File to replace: assets/img/services/seo-services.jpeg
+Context: Main image for SEO services section, needs to convey data analysis and search optimization
+==================================================
+Make a miniature, full-body, isometric, realistic figurine of a data analyst, wearing smart casual clothes and glasses, sitting at a desk with multiple monitors showing search rankings and colorful analytics graphs, with a magnifying glass hovering over keyword data, on a white background, minimal, 4K resolution.
+
+
+==================================================
+2. WEBSITE DEVELOPMENT
+File to replace: assets/img/services/ux-design.jpeg
+Context: Main image for web development section, needs to convey coding and design
+==================================================
+Make a miniature, isometric, realistic diorama of a modern web development workspace, featuring a large curved monitor displaying website wireframes and code editor, surrounded by floating browser windows, responsive device mockups, and colorful UI component cards, on a white background, minimal, 4K resolution.
+
+
+==================================================
+3. MARKETING
+File to replace: assets/img/services/marketing.jpeg
+Context: Main image for marketing section, needs to convey strategy and outreach
+==================================================
+Make a miniature, full-body, isometric, realistic figurine of a marketing strategist, wearing a blazer and casual pants, confidently holding a megaphone while standing next to a floating sales funnel diagram with email and ad icons flowing through it, on a white background, minimal, 4K resolution.
+
+
+==================================================
+4. BRAND STRATEGY
+File to replace: assets/img/services/brand-design.jpeg
+Context: Main image for brand strategy section, needs to convey creative design and identity work
+==================================================
+Make a miniature, full-body, isometric, realistic figurine of a creative director, wearing a black turtleneck, thoughtfully arranging floating brand elements including color swatches, logo variations, and typography samples on an invisible canvas, on a white background, minimal, 4K resolution.
+
+
+==================================================
+5. SOCIAL MEDIA
+File to replace: assets/img/services/social-media.jpeg
+Context: Main image for social media section, needs to convey engagement and content creation
+==================================================
+Make a miniature, full-body, isometric, realistic figurine of a content creator, wearing trendy casual clothes, holding up a smartphone while heart notifications, comment bubbles, and share icons float upward around them in a spiral, on a white background, minimal, 4K resolution.
+
+
+==================================================
+6. 404 PAGE
+File to replace: assets/img/404.png
+Context: Hero image for 404 error page, needs to be playful and convey "lost" or "not found"
+==================================================
+Make a miniature, isometric, realistic diorama of a whimsical "lost" scene, featuring a tiny astronaut standing on a small floating island looking at a broken directional signpost labeled "404", with scattered stars and a small telescope nearby, on a white background, minimal, 4K resolution.
+
+
+==================================================
+7. ABOUT PAGE BACKGROUND
+File to replace: assets/img/generic-corporate-3-3.jpeg
+Context: Subtle background image for about section, text overlays this so keep it simple
+==================================================
+Make a miniature, isometric, realistic diorama of a minimal business concept, featuring a simple desk with a glowing lightbulb, a small plant, and abstract growth arrows pointing upward, clean and uncluttered composition, on a white background, minimal, 4K resolution.
+
+
+==================================================
+RECOMMENDED IMAGE DIMENSIONS
+==================================================
+- Service images (1-5): 1200x800px (landscape)
+- 404 image (6): 800x800px (square)
+- About background (7): 1400x900px (landscape)
+
+==================================================
+UPLOAD FOLDER
+==================================================
+Upload generated images to: assets/img/ai-generated/
+
+Name files as:
+- seo-services.png
+- website-development.png
+- marketing.png
+- brand-strategy.png
+- social-media.png
+- 404.png
+- about-background.png
